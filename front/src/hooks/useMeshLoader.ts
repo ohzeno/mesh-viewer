@@ -5,6 +5,7 @@ import { loadedMeshDataState, errorMessageState } from "../state/atoms";
 import { meshCacheManager } from "../utils/meshCacheManager";
 import { useMeshList } from "./useMeshList";
 import { useResetProperties } from "./useResetProperties";
+import { getBackendBaseURL } from "../utils/apiConfig";
 
 export const useMeshLoader = () => {
   const [loadedMeshData, setLoadedMeshData] =
@@ -33,7 +34,7 @@ export const useMeshLoader = () => {
 
     try {
       const response = await axios.get(
-        `${process.env.REACT_APP_BACKEND_API_URL}/meshes/get/${meshId}`,
+        `${getBackendBaseURL()}/meshes/get/${meshId}`,
         { responseType: "arraybuffer" }
       );
 

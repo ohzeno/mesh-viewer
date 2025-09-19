@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useSetRecoilState } from "recoil";
 import { meshListState, errorMessageState } from "../state/atoms";
+import { getBackendBaseURL } from "../utils/apiConfig";
 
 export const useMeshList = () => {
   const setMeshList = useSetRecoilState(meshListState);
@@ -13,9 +14,7 @@ export const useMeshList = () => {
     setIsLoading(true);
     setError(null);
     try {
-      const response = await axios.get(
-        `${process.env.REACT_APP_BACKEND_API_URL}/meshes/list`
-      );
+      const response = await axios.get(`${getBackendBaseURL()}/meshes/list`);
       const sortedMeshes = response.data.sort(
         (a: ReadOnlyMesh, b: ReadOnlyMesh) => {
           return (
