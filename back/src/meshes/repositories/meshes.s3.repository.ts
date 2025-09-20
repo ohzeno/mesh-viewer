@@ -20,15 +20,21 @@ export class MeshesS3Repository {
   public readonly bucketName: string;
 
   constructor(private readonly configService: ConfigService) {
-    this.s3 = new AWS.S3({
-      accessKeyId: this.configService.get('AWS_S3_ACCESS_KEY'), // process.env.AWS_S3_ACCESS_KEY
-      secretAccessKey: this.configService.get('AWS_S3_SECRET_KEY'),
+    const mode = this.configService.get('MODE');
+
+    const s3Config: AWS.S3.Types.ClientConfiguration = {
       region: this.configService.get('AWS_S3_REGION'), // minio에선 사실 필요 없음
-      // 아래 셋은 minio를 사용할 때 필요
-      // endpoint: this.configService.get('AWS_S3_ENDPOINT'),
-      // s3ForcePathStyle: true,
-      // signatureVersion: 'v4',
-    });
+    };
+    // IAM 역할 사용하도록 바꿨으니 minio사용할 때만 키 사용
+    if (mode === 'dev') {
+      // MinIO 설정
+      s3Config.accessKeyId = this.configService.get('AWS_S3_ACCESS_KEY');
+      s3Config.secretAccessKey = this.configService.get('AWS_S3_SECRET_KEY');
+      s3Config.endpoint = this.configService.get('AWS_S3_ENDPOINT');
+      s3Config.s3ForcePathStyle = true;
+      s3Config.signatureVersion = 'v4';
+    }
+    this.s3 = new AWS.S3(s3Config);
     this.bucketName = this.configService.get('AWS_S3_BUCKET_NAME'); // nest-s3
   }
 

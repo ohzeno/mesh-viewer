@@ -2,6 +2,7 @@ import { useState } from "react";
 import axios from "axios";
 import { useSetRecoilState } from "recoil";
 import { meshListState } from "../state/atoms";
+import { getBackendBaseURL } from "../utils/apiConfig";
 
 export const useMeshUpload = () => {
   const [errorMessage, setErrorMessage] = useState<string>("");
@@ -16,7 +17,7 @@ export const useMeshUpload = () => {
     // 업로드 로직
     try {
       const response = await axios.post(
-        `${process.env.REACT_APP_BACKEND_API_URL}/meshes/upload`,
+        `${getBackendBaseURL()}/meshes/upload`,
         formData
       );
       setMeshList((oldMeshList) => [response.data, ...oldMeshList]);
