@@ -54,7 +54,7 @@ export class MeshesStorageRepository {
       await session.abortTransaction();
       // S3에 업로드된 파일 삭제
       if (objectKey) {
-        await this.meshesS3Repository.deleteMesh(error.objectKey);
+        await this.meshesS3Repository.deleteMesh(objectKey);
       }
       if (error instanceof S3UploadFailedException) throw error;
       throw new StorageOperationFailedException(
